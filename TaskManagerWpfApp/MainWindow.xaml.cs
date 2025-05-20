@@ -20,5 +20,10 @@ namespace TaskManagerWpfApp
         {
             InitializeComponent();
         }
+
+        private void TaskInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

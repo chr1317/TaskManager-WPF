@@ -7,6 +7,54 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <!-- Lista zadań -->
+            <ColumnDefinition Width="3*"/>
+            <!-- Szczegóły zadania -->
+        </Grid.ColumnDefinitions>
 
+        <!-- Lewa kolumna - lista zadań -->
+        <ScrollViewer Grid.Column="0" Background="#F8F8F8">
+            <StackPanel Margin="10">
+
+                <!-- Pasek dodawania zadania -->
+                <TextBox x:Name="TaskInput" Height="30" Margin="0,0,0,10" Text="{Binding NewTaskTitle}" />
+                <Button Content="Dodaj" Command="{Binding AddTaskCommand}" />
+
+                <!-- Lista zadań -->
+                <ItemsControl ItemsSource="{Binding Tasks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Expander Header="{Binding Title}" IsExpanded="False" Margin="0,5">
+                                <StackPanel>
+                                    <ItemsControl ItemsSource="{Binding SubTasks}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Content="{Binding Title}" IsChecked="{Binding IsCompleted}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Button Content="Szczegóły" Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                                </StackPanel>
+                            </Expander>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Prawa kolumna - szczegóły zadania -->
+        <StackPanel Grid.Column="1" Margin="10">
+            <TextBlock Text="Szczegóły zadania" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <TextBox Text="{Binding SelectedTask.Title}" Header="Tytuł" Margin="0,0,0,10"/>
+            <DatePicker SelectedDate="{Binding SelectedTask.DueDate}" Margin="0,0,0,10"/>
+            <ComboBox SelectedItem="{Binding SelectedTask.Priority}" ItemsSource="{Binding Priorities}" Margin="0,0,0,10"/>
+            <TextBox Text="{Binding SelectedTask.Description}" AcceptsReturn="True" Height="100"/>
+
+            <Button Content="Zapisz" Command="{Binding SaveTaskCommand}" Margin="0,10,0,0"/>
+        </StackPanel>
     </Grid>
+
 </Window>

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace TaskManagerWpfApp.Dto
 {
-    class CategoryDto
+    public class CategoryDto
     {
+        public int CID { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -5,7 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskManagerWpfApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Task Manager"
+        Height="600"
+        Width="900"
+        Background="#f5f5f5"
+        FontFamily="Segoe UI">
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -14,115 +19,192 @@
             <!-- Szczegóły zadania -->
         </Grid.ColumnDefinitions>
 
-        <!-- Lewa kolumna - lista zadań -->
+        <!-- Lewy panel -->
         <ScrollViewer Grid.Column="0" Background="#F8F8F8">
-            <StackPanel Margin="10">
-                <!-- Pasek przycisków -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,10" VerticalAlignment="Center">
-                    <!-- Dodaj -->
-                    <Button Content="➕ Dodaj"
-                Command="{Binding AddTaskCommand}"
-                Width="80" Margin="0,0,0,0"
-                            Background="#2E7D32"/>
+            <StackPanel Margin="15">
 
-                    <!-- Filtruj -->
-                    <Button Content="🧹 Filtruj"
-                Command="{Binding ToggleFilterPanelCommand}"
-                Width="80" Margin="0,0,0,0"
-                            Background="#455A64"/>
+                <!-- Górne przyciski -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <Border CornerRadius="6" Background="#4CAF50" Width="40" Height="40" Margin="0,0,10,0">
+                        <Button Content="➕"
+                                Command="{Binding AddTaskCommand}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="White"
+                                FontSize="18"
+                                Cursor="Hand"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+                    </Border>
+                 
+                    <Border CornerRadius="6" Background="#B2DFDB" Width="40" Height="40" Margin="0,0,10,0">
+                        <Button FontFamily="Segoe MDL2 Assets"
+                                Content=""
+                                ToolTip="Filtruj"
+                                Command="{Binding ToggleFilterPanelCommand}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#00695C"
+                                FontSize="18"
+                                Cursor="Hand"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+                    </Border>
 
-                    <!-- Sortuj -->
-                    <Button Content="🔃 Sortuj"
-                Command="{Binding ToggleSortPanelCommand}"
-                Width="80" Margin="0,0,0,0"
-                            Background="#546E7A"/>
-
-                    <!-- Szukaj -->
-                    <Button Content="🔍"
-                Command="{Binding ToggleSearchBarCommand}"
-                Width="40"
-                            Background="#CFD8DC"/>
+                    <Border CornerRadius="6" Background="#DCEDC8" Width="40" Height="40">
+                        <Button FontFamily="Segoe MDL2 Assets"
+                                Content=""
+                                ToolTip="Sortuj"
+                                Command="{Binding ToggleSortPanelCommand}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#558B2F"
+                                FontSize="18"
+                                Cursor="Hand"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+                    </Border>
                 </StackPanel>
 
-                <!-- Wyszukiwarka (pokazywana po kliknięciu lupki) -->
-                <TextBox Height="30"
-             Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
-             Visibility="{Binding IsSearchVisible, Converter={StaticResource BoolToVisibilityConverter}}"
-             Width="200"
-             Margin="0,0,0,10"/>
-                <TreeView>
-                    <TreeViewItem Header="Employee1">
-                        <TreeViewItem Header="Jesper"/>
-                        <TreeViewItem Header="Aaberg"/>
-                        <TreeViewItem Header="12345"/>
-                    </TreeViewItem>
-                    <TreeViewItem Header="Employee2">
-                        <TreeViewItem Header="Dominik"/>
-                        <TreeViewItem Header="Paiha"/>
-                        <TreeViewItem Header="98765"/>
-                    </TreeViewItem>
-                </TreeView>
+                <!-- Wyszukiwarka -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20" VerticalAlignment="Center">
+                    <Border Background="White"
+                            CornerRadius="8"
+                            BorderBrush="#DDD"
+                            BorderThickness="1"
+                            Padding="4"
+                            Height="40"
+                            VerticalAlignment="Center"
+                            SnapsToDevicePixels="True" Width="310">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="6" ShadowDepth="1" Opacity="0.2" />
+                        </Border.Effect>
+                        <DockPanel>
+                            <TextBox x:Name="SearchBox"
+                                     Width="250"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Padding="4,0"
+                                     FontSize="14"
+                                     VerticalContentAlignment="Center"
+                                     Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                                     Visibility="{Binding IsSearchVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <Button FontFamily="Segoe MDL2 Assets"
+                                    Content=""
+                                    ToolTip="Szukaj"
+                                    Command="{Binding SearchCommand}"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Foreground="#00796B"
+                                    FontSize="16"
+                                    Cursor="Hand"
+                                    Width="30"
+                                    Height="30"
+                                    VerticalAlignment="Center"
+                                    Margin="5,0,0,0"/>
+                        </DockPanel>
+                    </Border>
+                </StackPanel>
+                
                 <!-- Lista zadań -->
                 <ItemsControl ItemsSource="{Binding Tasks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Expander Header="{Binding Title}" IsExpanded="False" Margin="0,5">
-                                <StackPanel>
+                                <StackPanel Margin="5">
                                     <ItemsControl ItemsSource="{Binding SubTasks}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <CheckBox Content="{Binding Title}" IsChecked="{Binding IsCompleted}" />
+                                                <CheckBox Content="{Binding Title}" IsChecked="{Binding IsCompleted}" Margin="0,2"/>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                     <Button Content="Szczegóły"
-                                Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                CommandParameter="{Binding}" />
+                                            Command="{Binding DataContext.ShowDetailsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}"
+                                            Margin="0,5,0,0"
+                                            Height="30"
+                                            Background="#0078D7"
+                                            Foreground="White"
+                                            BorderBrush="{x:Null}"
+                                            Cursor="Hand"/>
                                 </StackPanel>
                             </Expander>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
-        
         </ScrollViewer>
 
-        <!-- Prawa kolumna - szczegóły zadania -->
-        <StackPanel Grid.Column="1" Margin="10">
-            <TextBlock Text="Szczegóły zadania" FontSize="16" FontWeight="Bold" Margin="5,0,0,10"/>
+        <!-- Prawy panel -->
+        <Border Grid.Column="1"
+                Margin="25"
+                Background="White"
+                CornerRadius="12"
+                Padding="25">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3"/>
+            </Border.Effect>
 
-            <TextBlock Text="Tytuł zadania" Margin="5,0,0,0" />
-            <TextBox Text="{Binding SelectedTask.Title}" Margin="5,0,5,10"/>
+            <StackPanel>
+                <TextBlock Text="Szczegóły zadania" FontSize="20" FontWeight="Bold" Margin="5,0,0,20"/>
 
-            <DatePicker SelectedDate="{Binding SelectedTask.DueDate}" Margin="5,0,5,10"/>
-            <TextBlock Text="Wybierz kategorię" Margin="5,10,0,2" />
-            <ComboBox ItemsSource="{Binding Categories}"
-          SelectedItem="{Binding SelectedTask.Category}"
-          Margin="5,0,5,0" />
-            <TextBlock Text="Ustal piorytet" Margin="5,10,0,2"/>
-            <ComboBox ItemsSource="{Binding Priorities}"
-                      SelectedItem="{Binding SelectedTask.Priority}"
-                      Margin="5,0,5,10"/>
+                <TextBlock Text="Tytuł zadania" Margin="5,0,0,5"/>
+                <TextBox Text="{Binding SelectedTask.Title}" Margin="0,0,0,15" Padding="5"/>
 
-            <Grid Margin="5,0,5,0" Height="100">
-                <TextBox x:Name="DescriptionBox"
-             Text="{Binding SelectedTask.Description, UpdateSourceTrigger=PropertyChanged}"
-             AcceptsReturn="True"
-             VerticalScrollBarVisibility="Auto"
-             TextWrapping="Wrap" />
+                <TextBlock Text="Termin wykonania" Margin="5,0,0,5"/>
+                <DatePicker SelectedDate="{Binding SelectedTask.DueDate}" Margin="0,0,0,15"/>
 
-                <TextBlock Text="Opis zadania"
-               Foreground="Gray"
-               Margin="8,6,0,0"
-               Padding="2"
-               IsHitTestVisible="False"
-               VerticalAlignment="Top"
-               Visibility="{Binding Text.IsEmpty, ElementName=DescriptionBox, Converter={StaticResource BoolToVisibilityConverter}}"/>
-            </Grid>
-            <Button Content="Dodaj podzadanie" Command="{Binding AddSubtask}" Margin=" 5,10,5,0" />
+                <TextBlock Text="Kategoria" Margin="5,0,0,5"/>
+                <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedTask.Category}" Margin="0,0,0,15"/>
 
-            <Button Content="Zapisz" Command="{Binding SaveTaskCommand}" Margin="5,10,5,0"/>
-        </StackPanel>
+                <TextBlock Text="Priorytet" Margin="5,0,0,5"/>
+                <ComboBox ItemsSource="{Binding Priorities}" SelectedItem="{Binding SelectedTask.Priority}" Margin="0,0,0,15"/>
+
+                <TextBlock Text="Opis zadania" Margin="5,0,0,5"/>
+                <Grid Height="100" Margin="0,0,0,15">
+                    <TextBox x:Name="DescriptionBox"
+                             Text="{Binding SelectedTask.Description, UpdateSourceTrigger=PropertyChanged}"
+                             AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Auto"
+                             TextWrapping="Wrap"
+                             Padding="5"
+                             BorderBrush="#CCC"/>
+
+                    <TextBlock Text="Opis zadania"
+                               Foreground="Gray"
+                               Margin="10,6,0,0"
+                               IsHitTestVisible="False"
+                               VerticalAlignment="Top"
+                               Visibility="{Binding Text.IsEmpty, ElementName=DescriptionBox, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <Border CornerRadius="6" Background="#0288D1" Width="140" Height="40" Margin="0,0,200,0">
+                        <Button Content="Dodaj podzadanie"
+                            Command="{Binding AddSubtask}"
+                            Height="34"
+                            Margin="0,0,10,0"
+                            Background="#0288D1"
+                            Foreground="White"
+                            Padding="15,0"
+                            BorderBrush="{x:Null}"
+                            Cursor="Hand" />
+                    </Border>
+                    
+                    <Border CornerRadius="6" Background="#4CAF50" Width="90" Height="40" Margin="0,0,10,0">
+                        <Button Content="Zapisz"
+                            Command="{Binding SaveTaskCommand}"
+                            Height="34"
+                            Background="#4CAF50"
+                            Foreground="White"
+                            Padding="25,0"
+                            BorderBrush="{x:Null}"
+                            Cursor="Hand" Click="Button_Click" />
+                    </Border>
+                    
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </Grid>
-
 </Window>

@@ -5,7 +5,7 @@
         Height="280"
         Width="360"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
         Background="#f5f5f5"
         FontFamily="Segoe UI">
 

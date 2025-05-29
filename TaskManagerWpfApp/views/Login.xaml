@@ -4,7 +4,7 @@
         Title="Logowanie"
         Height="280"
         Width="360"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
         WindowStartupLocation="CenterScreen"
         Background="#f5f5f5"
         FontFamily="Segoe UI">

@@ -25,6 +25,13 @@ namespace TaskManagerWpfApp
         {
 
         }
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            var loginWindow = new Login();
+            loginWindow.Show();
+            this.Close();
+        }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

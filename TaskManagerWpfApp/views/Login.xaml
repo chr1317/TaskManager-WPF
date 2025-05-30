@@ -20,7 +20,7 @@
                        HorizontalAlignment="Center"/>
 
             <TextBlock Text="Nazwa użytkownika" Margin="0,0,0,3"/>
-            <TextBox x:Name="UsernameBox" Height="26" Margin="0,0,0,8" Padding="5"/>
+            <TextBox Height="26" Margin="0,0,0,8" Padding="5" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Text="Hasło" Margin="0,0,0,3"/>
             <PasswordBox x:Name="PasswordBox" Height="26" Margin="0,0,0,10" Padding="5"/>
@@ -32,6 +32,7 @@
                         BorderThickness="0"
                         Foreground="White"
                         FontWeight="SemiBold"
+                        Command="{Binding LoginCommand}"
                         Cursor="Hand"/>
             </Border>
 

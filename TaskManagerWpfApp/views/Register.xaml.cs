@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TaskManagerWpfApp.ViewModels;
 
 namespace TaskManagerWpfApp
 {
@@ -22,6 +23,21 @@ namespace TaskManagerWpfApp
         public Register()
         {
             InitializeComponent();
+            DataContext = new TaskManagerWpfApp.ViewModels.RegisterViewModel();
+        }
+
+        private void Register_Click(object sender, RoutedEventArgs e)
+        {
+            if(DataContext is RegisterViewModel vm)
+            {
+                vm.Password = PasswordBox.Password;
+            }
+        }
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            var loginWindow = new Login();
+            loginWindow.Show();
+            this.Close();
         }
     }
 }

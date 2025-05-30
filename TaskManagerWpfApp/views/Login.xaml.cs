@@ -11,17 +11,40 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TaskManagerWpfApp.ViewModels;
+using TaskManagerWpfApp;
 
 namespace TaskManagerWpfApp
 {
-    /// <summary>
-    /// Logika interakcji dla klasy Login.xaml
-    /// </summary>
     public partial class Login : Window
     {
         public Login()
         {
             InitializeComponent();
+            var vm = new LoginViewModel();
+            vm.LoginSucceeded += OnLoginSuccess;
+            DataContext = vm;
         }
+        private void OnLoginSuccess()
+        {
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
+        }
+
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            if(DataContext is LoginViewModel vm)
+            {
+                vm.Password = PasswordBox.Password;
+            }
+        }
+        private void Register_Click(object sender, RoutedEventArgs e)
+        {
+            var registerWindow = new Register();
+            registerWindow.Show();
+            this.Close();
+        }
+
     }
 }

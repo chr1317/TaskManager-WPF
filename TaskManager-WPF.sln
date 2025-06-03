@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerWpfApp", "TaskManagerWpfApp\TaskManagerWpfApp.csproj", "{402A9E53-772C-488F-862C-364CEE253876}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9A34F407-F013-4D9F-98EC-6495BE4AC320} = {9A34F407-F013-4D9F-98EC-6495BE4AC320}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager-API", "TaskManager-API\TaskManager-API.csproj", "{9A34F407-F013-4D9F-98EC-6495BE4AC320}"
 EndProject

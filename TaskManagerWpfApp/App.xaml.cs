@@ -16,6 +16,10 @@ namespace TaskManagerWpfApp
             var loginWindow = new Login(); // albo: new Views.Login()
             loginWindow.Show();
         }
+        public static class Session
+        {
+            public static int LoggedUserId { get; set; }
+        }
     }
 
 }

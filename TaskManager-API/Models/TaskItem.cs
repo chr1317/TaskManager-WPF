@@ -20,7 +20,7 @@ namespace TaskManager_API.Models
         public string Priority { get; set; }
 
         [Column("Status")]
-        public bool Status { get; set; }
+        public int Status { get; set; }
 
         [Column("CID")]
         [ForeignKey("Category")]

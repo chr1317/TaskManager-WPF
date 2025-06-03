@@ -8,7 +8,7 @@ namespace TaskManagerWpfApp.Dto
 {
     public class CategoryDto
     {
-        public int CID { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

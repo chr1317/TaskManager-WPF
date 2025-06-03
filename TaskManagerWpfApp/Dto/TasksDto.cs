@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TaskManagerWpfApp.Dto
 {
-    class TasksDto
+    public class TasksDto
     {
         public int TID { get; set; }
         public int UID { get; set; }

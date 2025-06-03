@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TaskManager_API.Models
 {
@@ -6,11 +7,12 @@ namespace TaskManager_API.Models
     public class Category
     {
         [Column("CID")]
+        [Key]
         public int Id { get; set; }
 
         [Column("Name")]
         public string Name { get; set; }
 
-        public ICollection<TaskItem>? Tasks { get; set; }
+        //public ICollection<TaskItem>? Tasks { get; set; }
     }
 }

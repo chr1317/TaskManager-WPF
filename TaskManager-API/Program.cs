@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql;
+using TaskManager_API.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,24 +12,75 @@ builder.Services.AddDbContext<TaskManager_API.AppDbContext>(options  =>
 
 builder.Services.AddControllers();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
 
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var context = scope.ServiceProvider.GetRequiredService<TaskManager_API.AppDbContext>();
+
+    if (!context.Users.Any(u => u.Username == "admin"))
+    {
+        var passwordHasher = new PasswordHasher<Users>();
+        var admin = new Users
+        {
+            Username = "admin"
+        };
+        admin.PasswordHash = passwordHasher.HashPassword(admin, "admin123");
+
+        context.Users.Add(admin);
+        context.SaveChanges();
+    }
+    if (!context.Categories.Any())
+    {
+        context.Categories.AddRange(new List<Category>
+    {
+        new Category { Id = 1, Name = "Dom" },
+        new Category { Id = 2, Name = "Praca" }
+    });
+        context.SaveChanges();
+    }
+    if (!context.Tasks.Any(t => t.UserId == 5))
+    {
+        var tasksForUser5 = new List<TaskItem>
+        {
+            new TaskItem {
+                Title = "Pierwsze seedowane zadanie",
+                Description = "To jest przykładowe zadanie seedowane.",
+                UserId = 5,
+                CategoryId = 1,
+                Priority = "High",
+                Status = 1,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(2)
+            },
+            new TaskItem {
+                Title = "Drugie seedowane zadanie",
+                Description = "Drugie zadanie przykładowe.",
+                UserId = 5,
+                CategoryId = 2,
+                Priority = "Medium",
+                Status = 0,
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(4)
+            }
+            
+        };
+        context.Tasks.AddRange(tasksForUser5);
+        context.SaveChanges();
+    }
+
+
+    //app.UseHttpsRedirection();
+
+    //app.UseAuthorization();
+
+    app.MapControllers();
+
+
+
+    app.Run();
 }
-
-
-app.UseHttpsRedirection();
-
-//app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
 

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskManagerWpfApp"
+        xmlns:helpers="clr-namespace:TaskManagerWpfApp.Helpers"
         mc:Ignorable="d"
         Title="Task Manager"
         Height="600"
@@ -12,6 +13,7 @@
         FontFamily="Segoe UI">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <helpers:TaskEqualityConverter x:Key="TaskEqualityConverter"/>
     </Window.Resources>
 
 
@@ -114,7 +116,22 @@
                 <ItemsControl ItemsSource="{Binding Tasks}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Expander Header="{Binding Title}" IsExpanded="False" Margin="0,5">
+                            <Expander Margin="0,5">
+                                <Expander.IsExpanded>
+                                <MultiBinding Converter="{StaticResource TaskEqualityConverter}">
+                                    <Binding Path="DataContext.SelectedTask" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                    <Binding Path="."/>
+                                </MultiBinding>
+                                </Expander.IsExpanded>
+                                <Expander.Header>
+                                <TextBlock Text="{Binding Title}" />
+                            </Expander.Header>
+                            <Expander.Style>
+                                <Style TargetType="Expander">
+                                    <EventSetter Event="Expanded" Handler="Expander_Expanded"/>
+                                </Style>
+                            </Expander.Style>
+
                                 <StackPanel Margin="5">
                                     <ItemsControl ItemsSource="{Binding SubTasks}">
                                         <ItemsControl.ItemTemplate>
@@ -157,7 +174,7 @@
                 <TextBox Text="{Binding SelectedTask.Title}" Margin="0,0,0,15" Padding="5"/>
 
                 <TextBlock Text="Termin wykonania" Margin="5,0,0,5"/>
-                <DatePicker SelectedDate="{Binding SelectedTask.DueDate}" Margin="0,0,0,15"/>
+                <DatePicker SelectedDate="{Binding SelectedTask.EndDate}" Margin="0,0,0,15"/>
 
 
                 <TextBlock Text="Kategoria" Margin="5,0,0,5"/>

@@ -15,7 +15,7 @@
         {
             modelBuilder.Entity<TaskItem>()
                 .HasOne(t => t.Category)
-                .WithMany(c => c.Tasks)
+                .WithMany()
                 .HasForeignKey(t => t.CategoryId)
                 .HasConstraintName("FK_Tasks_Categories");
             modelBuilder.Entity<TaskItem>()

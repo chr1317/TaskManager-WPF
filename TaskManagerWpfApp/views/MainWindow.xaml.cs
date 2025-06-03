@@ -16,10 +16,22 @@ namespace TaskManagerWpfApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly TaskViewModel _viewModel = new();
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = _viewModel;
+            
+
+            Loaded += MainWindow_Loaded;
         }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.LoadCategoriesAsync();
+            await _viewModel.LoadUserTasks();
+        }
+
 
         private void TaskInput_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -37,5 +49,29 @@ namespace TaskManagerWpfApp
         {
 
         }
+        private void ExpanderHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            
+            if (sender is TextBlock tb && tb.DataContext is ToDoTasks clickedTask)
+            {
+                var vm = DataContext as TaskViewModel;
+                if (vm != null)
+                {
+                    vm.SelectedTask = clickedTask;
+                }
+            }
+        }
+        private void Expander_Expanded(object sender, RoutedEventArgs e)
+        {
+            if (sender is Expander expander && expander.DataContext is ToDoTasks task)
+            {
+                var vm = DataContext as TaskViewModel;
+                if (vm != null)
+                {
+                    vm.SelectedTask = task;
+                }
+            }
+        }
+
     }
 }

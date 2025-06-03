@@ -17,12 +17,15 @@ namespace TaskManager_API.Controllers
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskItem>>> GetTasks(
+            [FromQuery] int uid,
             [FromQuery] int? cid,
-            [FromQuery] bool? status,
+            [FromQuery] int? status,
             [FromQuery] string? priority,
             [FromQuery] DateTime? endDateBefore)
         {
-            var query = _context.Tasks.AsQueryable();
+            var query = _context.Tasks.Where(t => t.UserId == uid);
+
+
 
             if (cid.HasValue)
                 query = query.Where(t => t.CategoryId == cid);

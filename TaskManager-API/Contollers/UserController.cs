@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManager_API;
 using TaskManager_API.Models;
+using Microsoft.AspNetCore.Identity;
+using TaskManager_API.Dto;
 
 namespace TaskManager_API.Controllers
 {
@@ -45,11 +47,64 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Users>> CreateUser(Users user)
     {
+        var passwordHasher = new PasswordHasher<Users>();
+        user.PasswordHash = passwordHasher.HashPassword(user, user.PasswordHash);
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
     }
+
+    [HttpPost("login")]
+    public async Task<ActionResult<UserDto>> Login(LoginRequestDto loginRequest)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == loginRequest.Username);
+        if (user == null)
+            return Unauthorized("Niepoprawna nazwa użytkownika lub hasło1");
+
+        var passwordHasher = new PasswordHasher<Users>();
+        var result = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequest.Password);
+
+        if (result == PasswordVerificationResult.Failed)
+            return Unauthorized("Niepoprawna nazwa użytkownika lub hasło2");
+
+        var userDto = new UserDto
+        {
+            Id = user.Id,
+            Username = user.Username
+        };
+
+        return Ok(userDto);
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequest)
+    {
+        if (string.IsNullOrWhiteSpace(registerRequest.Username) || string.IsNullOrWhiteSpace(registerRequest.Password))
+        {
+            return BadRequest("Login i hasło wymagane!");
+        }
+
+        if (_context.Users.Any(u => u.Username == registerRequest.Username))
+        {
+            return Conflict("Taki użytkownik już istnieje.");
+        }
+
+        var user = new Users
+        {
+            Username = registerRequest.Username
+        };
+
+        var passwordHasher = new PasswordHasher<Users>();
+        user.PasswordHash = passwordHasher.HashPassword(user, registerRequest.Password);
+
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { user.Id, user.Username });
+    }
+    
 
     // PUT: api/Users/5
     [HttpPut("{id}")]
@@ -91,5 +146,6 @@ public class UsersController : ControllerBase
 
     private bool UserExists(int id) =>
         _context.Users.Any(e => e.Id == id);
+    }
 }
-}
+

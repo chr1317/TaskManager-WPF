@@ -18,16 +18,15 @@ namespace TaskManager_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            return await _context.Categories
-                .Include(c => c.Tasks)
-                .ToListAsync();
+            var categories = await _context.Categories.ToListAsync();
+            return Ok(categories);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
             var category = await _context.Categories
-                .Include(c => c.Tasks)
+                //.Include(c => c.Tasks)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (category == null)

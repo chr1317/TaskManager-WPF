@@ -1,5 +1,9 @@
 ﻿using System.ComponentModel;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Windows;
 using System.Windows.Input;
+using TaskManagerWpfApp.Dto;
 
 namespace TaskManagerWpfApp.ViewModels
 {
@@ -23,21 +27,47 @@ namespace TaskManagerWpfApp.ViewModels
 
         public LoginViewModel()
         {
-            LoginCommand = new RelayCommand(Login);
+            LoginCommand = new RelayCommand(async () => await LoginAsync());
         }
 
-        private void Login()
+        private async Task LoginAsync()
         {
-            // Tu dodaj logikę logowania (np. zapytanie do API)
-            if (Username == "admin" && Password == "1234")
+            try
             {
-                // Logowanie OK – można otworzyć główne okno
-                System.Windows.MessageBox.Show("Zalogowano pomyślnie!");
-                LoginSucceeded?.Invoke();
+                using var client = new HttpClient();
+                client.BaseAddress = new Uri("http://localhost:5272");
+
+                var loginRequest = new Dto.LoginRequestDto
+                {
+                    Username = Username,
+                    Password = Password
+                };
+
+                var response = await client.PostAsJsonAsync("api/Users/login", loginRequest);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    var userDto = await response.Content.ReadFromJsonAsync<Dto.UserDto>();
+                    if (userDto != null)
+                    {
+                        App.Session.LoggedUserId = userDto.Id;
+                        MessageBox.Show("Zalogowano pomyślnie!");
+                        LoginSucceeded?.Invoke();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Błąd podczas pobierania danych użytkownika.");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"Błąd logowania. Status: {response.StatusCode}\nTreść: {responseContent}");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Niepoprawne dane logowania.");
+                MessageBox.Show($"Błąd połączenia z serwerem: {ex.Message}");
             }
         }
 

@@ -23,7 +23,9 @@ namespace TaskManagerWpfApp
         public Register()
         {
             InitializeComponent();
-            DataContext = new TaskManagerWpfApp.ViewModels.RegisterViewModel();
+            var vm = new RegisterViewModel();
+            DataContext = vm;
+            vm.RegisterSucceeded += OnRegisterSucceeded;
         }
 
         private void Register_Click(object sender, RoutedEventArgs e)
@@ -34,6 +36,12 @@ namespace TaskManagerWpfApp
             }
         }
         private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            var loginWindow = new Login();
+            loginWindow.Show();
+            this.Close();
+        }
+        private void OnRegisterSucceeded()
         {
             var loginWindow = new Login();
             loginWindow.Show();

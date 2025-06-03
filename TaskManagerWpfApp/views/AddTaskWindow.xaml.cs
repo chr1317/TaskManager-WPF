@@ -75,5 +75,9 @@ namespace TaskManagerWpfApp.Views
                 MessageBox.Show($"Błąd podczas dodawania zadania: {ex.Message}");
             }
         }
+        private async void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

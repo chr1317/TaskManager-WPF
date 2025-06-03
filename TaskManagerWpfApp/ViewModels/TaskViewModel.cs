@@ -7,6 +7,7 @@ using System.Windows;
 using TaskManagerWpfApp.Helpers;
 using TaskManagerWpfApp.Views;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 
 namespace TaskManagerWpfApp
 {
@@ -15,6 +16,20 @@ namespace TaskManagerWpfApp
         public ObservableCollection<ToDoTasks> Tasks { get; set; } = new();
         public ObservableCollection<Category> Categories { get; set; } = new();
         public ObservableCollection<User> Users { get; set; } = new();
+
+        public ObservableCollection<string> Priorities { get; } = new()
+{
+    "High",
+    "Medium",
+    "Low"
+};
+
+        private string _selectedPriority;
+        public string SelectedPriority
+        {
+            get => _selectedPriority;
+            set { _selectedPriority = value; OnPropertyChanged(nameof(SelectedPriority)); }
+        }
         public ICommand AddTaskCommand { get; }
 
         private ToDoTasks _selectedTask;
@@ -23,14 +38,12 @@ namespace TaskManagerWpfApp
             get => _selectedTask;
             set
             {
-                if (_selectedTask != value)
-                {
-                    _selectedTask = value;
-                    OnPropertyChanged(nameof(SelectedTask));
-                    OnPropertyChanged(nameof(IsDescriptionEmpty));
-                }
+                _selectedTask = value;
+                OnPropertyChanged(nameof(SelectedTask));
+                OnPropertyChanged(nameof(IsDescriptionEmpty));
             }
         }
+
 
         private Category _selectedCategory;
         public Category SelectedCategory
@@ -57,7 +70,7 @@ namespace TaskManagerWpfApp
             try
             {
                 var dtos = await _apiClient.GetTasksByUserAsync(userId);
-                Tasks.Clear();
+                //Tasks.Clear();
                 foreach (var dto in dtos)
                     Tasks.Add(TaskMapper.ToModel(dto));
             }
@@ -67,10 +80,59 @@ namespace TaskManagerWpfApp
             }
         }
 
+        public ICommand SelectTaskCommand { get; }
+
         public TaskViewModel()
         {
             AddTaskCommand = new RelayCommand(OpenAddTaskDialog);
+            SelectTaskCommand = new RelayCommand<ToDoTasks>(SelectTask);
+
+            // DANE TESTOWE widoczne od razu po uruchomieniu
+            var zadanieGlowne = new ToDoTasks
+            {
+                TID = 1,
+                Title = "Zadanie główne testowe",
+                Description = "Opis zadania głównego",
+                Priority = "High",
+                Status = TaskStatus.Incomplete,
+                Subtasks = new ObservableCollection<ToDoTasks>()
+            };
+
+            var subtask1 = new ToDoTasks
+            {
+                TID = 2,
+                PID = 1,
+                Title = "Podzadanie 1",
+                Description = "Opis podzadania",
+                Priority = "Medium",
+                Status = TaskStatus.Incomplete
+            };
+
+            var subtask2 = new ToDoTasks
+            {
+                TID = 3,
+                PID = 1,
+                Title = "Podzadanie 2",
+                Description = "Inne podzadanie testowe",
+                Priority = "Low",
+                Status = TaskStatus.Complete
+            };
+
+            zadanieGlowne.Subtasks.Add(subtask1);
+            zadanieGlowne.Subtasks.Add(subtask2);
+
+            Tasks.Add(zadanieGlowne);
         }
+
+
+        private void SelectTask(ToDoTasks task)
+        {
+            SelectedTask = null; // jeśli potrzebujesz odświeżyć UI
+            SelectedTask = task;
+
+
+        }
+
         private void OpenAddTaskDialog()
         {
             ShowAddTaskDialog();

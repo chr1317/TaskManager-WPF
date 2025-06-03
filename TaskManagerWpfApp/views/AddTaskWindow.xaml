@@ -30,8 +30,7 @@
         <StackPanel Grid.Row="5" Margin="0,0,0,10">
             <TextBlock Text="Ustal piorytet:" Margin="0,0,0,5"/>
             <ComboBox ItemsSource="{Binding Priorities}"
-                      SelectedItem="{Binding SelectedPriorities}"
-                      DisplayMemberPath="Name"/>
+                      SelectedItem="{Binding SelectedPriority}"/>
 
         </StackPanel>
         <StackPanel Grid.Row="6" Margin="0,0,0,10">

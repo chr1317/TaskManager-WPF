@@ -18,6 +18,7 @@ namespace TaskManagerWpfApp.Views
             ViewModel = new AddTaskViewModel();
             DataContext = ViewModel;
             LoadCategories();
+            LoadPriorities();
         }
 
         private async void LoadCategories()
@@ -38,7 +39,19 @@ namespace TaskManagerWpfApp.Views
                 MessageBox.Show($"Błąd ładowania kategorii: {ex.Message}");
             }
         }
-
+        private void LoadPriorities()
+        {
+            try
+            {
+                ViewModel.Priorities.Clear();
+                ViewModel.Priorities.Add("High");
+                ViewModel.Priorities.Add("Medium");
+                ViewModel.Priorities.Add("Low");
+            }
+            catch (Exception ex)
+            {
+            }
+        }
         private async void Add_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(ViewModel.Title))

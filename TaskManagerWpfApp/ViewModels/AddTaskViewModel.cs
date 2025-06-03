@@ -20,6 +20,23 @@ namespace TaskManagerWpfApp.ViewModels
             set { _selectedCategory = value; OnPropertyChanged(); }
         }
 
+        public ObservableCollection<string> Priorities { get; } = new()
+{
+    "High",
+    "Medium",
+    "Low"
+};
+
+        private string _selectedPriority;
+        public string SelectedPriority
+        {
+            get => _selectedPriority;
+            set { _selectedPriority = value; OnPropertyChanged(); }
+        }
+
+
+
+
 
 
         // Pozostałe pola jak wcześniej:

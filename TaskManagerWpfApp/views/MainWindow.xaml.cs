@@ -49,7 +49,7 @@ namespace TaskManagerWpfApp
         {
 
         }
-        private void ExpanderHeader_Click(object sender, MouseButtonEventArgs e)
+        /*private void ExpanderHeader_Click(object sender, MouseButtonEventArgs e)
         {
             
             if (sender is TextBlock tb && tb.DataContext is ToDoTasks clickedTask)
@@ -60,7 +60,30 @@ namespace TaskManagerWpfApp
                     vm.SelectedTask = clickedTask;
                 }
             }
+        }*/
+        private void ExpanderHeader_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBlock tb && tb.DataContext is ToDoTasks clickedTask)
+            {
+                if (DataContext is TaskViewModel vm)
+                {
+                    // Zawsze ustawiamy nowy obiekt – nawet jeśli to ten sam
+                    vm.SelectedTask = null;
+                    vm.SelectedTask = clickedTask;
+                }
+            }
         }
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (DataContext is TaskViewModel vm && e.NewValue is ToDoTasks selected)
+            {
+                vm.SelectedTask = selected;
+            }
+        }
+
+
+
+
         private void Expander_Expanded(object sender, RoutedEventArgs e)
         {
             if (sender is Expander expander && expander.DataContext is ToDoTasks task)

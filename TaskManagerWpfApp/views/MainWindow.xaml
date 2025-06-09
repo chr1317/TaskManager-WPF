@@ -30,7 +30,7 @@
             <StackPanel Margin="15">
 
                 <!-- Górne przyciski -->
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20" RenderTransformOrigin="0.54,0.493">
                     <Border CornerRadius="6" Background="#4CAF50" Width="40" Height="40" Margin="0,0,10,0">
                         <Button Content="➕"
                                 Command="{Binding AddTaskCommand}"
@@ -69,6 +69,18 @@
                                 Cursor="Hand"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"/>
+                    </Border>
+
+                    <Border CornerRadius="6" Background="#E53935" Width="40" Height="40" Margin="10,0,10,0">
+                        <Button Content="🗑"
+                        Command="{Binding DeleteTaskCommand}"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="White"
+                        FontSize="18"
+                        Cursor="Hand"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
                     </Border>
                 </StackPanel>
 

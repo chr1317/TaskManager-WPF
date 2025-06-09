@@ -74,12 +74,12 @@ namespace TaskManagerWpfApp
             }
         }
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            if (DataContext is TaskViewModel vm && e.NewValue is ToDoTasks selected)
-            {
-                vm.SelectedTask = selected;
-            }
-        }
+{
+    if (DataContext is TaskViewModel vm && e.NewValue is ToDoTasks selected)
+    {
+        vm.SelectedTask = selected;
+    }
+}
 
 
 

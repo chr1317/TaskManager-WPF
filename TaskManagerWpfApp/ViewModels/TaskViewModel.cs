@@ -81,11 +81,28 @@ namespace TaskManagerWpfApp
         }
 
         public ICommand SelectTaskCommand { get; }
+        private SortField _selectedSortField = SortField.Title;
+        public SortField SelectedSortField
+        {
+            get => _selectedSortField;
+            set { _selectedSortField = value; OnPropertyChanged(nameof(SelectedSortField)); }
+        }
 
+        private bool _isAscending = true;
+        public string SortDirectionIcon => _isAscending ? "⬇" : "⬆";
+
+        public ICommand SortTasksCommand { get; }
+        public enum SortField
+        {
+            Title,
+            Priority,
+            EndDate
+        }
         public TaskViewModel()
         {
             AddTaskCommand = new RelayCommand(OpenAddTaskDialog);
             SelectTaskCommand = new RelayCommand<ToDoTasks>(SelectTask);
+            SortTasksCommand = new RelayCommand(SortAllTasks);
 
             // DANE TESTOWE widoczne od razu po uruchomieniu
             var zadanieGlowne = new ToDoTasks
@@ -123,7 +140,27 @@ namespace TaskManagerWpfApp
 
             Tasks.Add(zadanieGlowne);
         }
+        private void SortAllTasks()
+        {
+            SortTaskTree(Tasks);
+            _isAscending = !_isAscending;
+        }
 
+        private void SortTaskTree(ObservableCollection<ToDoTasks> taskList)
+        {
+            // Kopia posortowana
+            var sorted = _isAscending
+        ? taskList.OrderBy(t => t.Title).ToList()
+        : taskList.OrderByDescending(t => t.Title).ToList();
+            // Czyścimy oryginał i dodajemy w kolejności
+            taskList.Clear();
+            foreach (var task in sorted)
+            {
+                // Sortuj rekurencyjnie podzadania
+                SortTaskTree(task.Subtasks);
+                taskList.Add(task);
+            }
+        }
 
         private void SelectTask(ToDoTasks task)
         {

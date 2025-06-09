@@ -61,7 +61,7 @@
                         <Button FontFamily="Segoe MDL2 Assets"
                                 Content=""
                                 ToolTip="Sortuj"
-                                Command="{Binding ToggleSortPanelCommand}"
+                                Command="{Binding SortTasksCommand}"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Foreground="#558B2F"

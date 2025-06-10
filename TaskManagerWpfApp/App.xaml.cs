@@ -13,8 +13,12 @@ namespace TaskManagerWpfApp
         {
             base.OnStartup(e);
 
-            var loginWindow = new Login(); // albo: new Views.Login()
+            var loginWindow = new Login();
             loginWindow.Show();
+        }
+        public App()
+        {
+
         }
         public static class Session
         {

@@ -15,10 +15,10 @@ namespace TaskManagerWpfApp.Dto
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public string Priority { get; set; } // np. "Low", "Medium", "High"
-        public int Status { get; set; } // np. 0 = Incomplete, 1 = Complete
+        public PriorityLevel Priority { get; set; }
+        public int Status { get; set; }
 
-        public int? PID { get; set; } // Parent Task ID (dla podzadań)
+        public int? PID { get; set; } 
 
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }

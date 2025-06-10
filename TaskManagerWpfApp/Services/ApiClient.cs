@@ -18,9 +18,19 @@ namespace TaskManagerWpfApp.Services
             BaseAddress = new Uri("http://localhost:5272/api/")
         };
 
+        private readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter() }
+        };
+
         public async Task<List<TasksDto>> GetTasksByUserAsync(int userId)
         {
-            return await _http.GetFromJsonAsync<List<TasksDto>>($"Task?uid={userId}");
+            var response = await _http.GetAsync($"Task?uid={userId}");
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<TasksDto>>(json, _jsonOptions) ?? new();
         }
 
         public async Task<TasksDto?> GetTaskByIdAsync(int id)
@@ -28,15 +38,20 @@ namespace TaskManagerWpfApp.Services
             return await _http.GetFromJsonAsync<TasksDto>($"Task/{id}");
         }
 
-        public async Task<bool> CreateTaskAsync(TasksDto task)
+        public async Task<TasksDto?> CreateTaskAsync(TasksDto task)
         {
             var response = await _http.PostAsJsonAsync("Task", task);
-            return response.IsSuccessStatusCode;
+            
+            if(response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<TasksDto>();
+            }
+            return null;
         }
 
-        public async Task<bool> UpdateTaskAsync(TasksDto task)
+        public async Task<bool> UpdateTaskAsync(int taskId, TasksDto task)
         {
-            var response = await _http.PutAsJsonAsync($"Task/{task.TID}", task);
+            var response = await _http.PutAsJsonAsync($"Task/{taskId}", task);
             return response.IsSuccessStatusCode;
         }
 

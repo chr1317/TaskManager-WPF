@@ -49,25 +49,12 @@ namespace TaskManagerWpfApp
         {
 
         }
-        /*private void ExpanderHeader_Click(object sender, MouseButtonEventArgs e)
-        {
-            
-            if (sender is TextBlock tb && tb.DataContext is ToDoTasks clickedTask)
-            {
-                var vm = DataContext as TaskViewModel;
-                if (vm != null)
-                {
-                    vm.SelectedTask = clickedTask;
-                }
-            }
-        }*/
         private void ExpanderHeader_Click(object sender, MouseButtonEventArgs e)
         {
             if (sender is TextBlock tb && tb.DataContext is ToDoTasks clickedTask)
             {
                 if (DataContext is TaskViewModel vm)
                 {
-                    // Zawsze ustawiamy nowy obiekt – nawet jeśli to ten sam
                     vm.SelectedTask = null;
                     vm.SelectedTask = clickedTask;
                 }

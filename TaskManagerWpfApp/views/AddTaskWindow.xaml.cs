@@ -44,9 +44,9 @@ namespace TaskManagerWpfApp.Views
             try
             {
                 ViewModel.Priorities.Clear();
-                ViewModel.Priorities.Add("High");
-                ViewModel.Priorities.Add("Medium");
-                ViewModel.Priorities.Add("Low");
+                ViewModel.Priorities.Add(PriorityLevel.High);
+                ViewModel.Priorities.Add(PriorityLevel.Medium);
+                ViewModel.Priorities.Add(PriorityLevel.Low);
             }
             catch (Exception ex)
             {
@@ -72,15 +72,15 @@ namespace TaskManagerWpfApp.Views
                 Description = ViewModel.Description,
                 CID = ViewModel.SelectedCategory.CID,
                 UID = App.Session.LoggedUserId,
-                Priority = "Medium",
+                Priority = ViewModel.SelectedPriority ?? PriorityLevel.Medium,
                 Status = 0, // Incomplete
                 StartDate = DateTime.Now,
-                EndDate = ViewModel.EndDate
+                EndDate = ViewModel.EndDate,
+                PID = ViewModel.ParentTaskId
             };
 
             try
             {
-                await _apiClient.CreateTaskAsync(newTaskDto);
                 DialogResult = true;
             }
             catch (Exception ex)

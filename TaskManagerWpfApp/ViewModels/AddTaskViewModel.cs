@@ -20,15 +20,15 @@ namespace TaskManagerWpfApp.ViewModels
             set { _selectedCategory = value; OnPropertyChanged(); }
         }
 
-        public ObservableCollection<string> Priorities { get; } = new()
-{
-    "High",
-    "Medium",
-    "Low"
-};
+        private ObservableCollection<PriorityLevel> _priorities = new();
+        public ObservableCollection<PriorityLevel> Priorities
+        {
+            get => _priorities;
+            set { _priorities = value; OnPropertyChanged(); }
+        }
 
-        private string _selectedPriority;
-        public string SelectedPriority
+        private PriorityLevel? _selectedPriority;
+        public PriorityLevel? SelectedPriority
         {
             get => _selectedPriority;
             set { _selectedPriority = value; OnPropertyChanged(); }
@@ -39,7 +39,6 @@ namespace TaskManagerWpfApp.ViewModels
 
 
 
-        // Pozostałe pola jak wcześniej:
         private string _title;
         public string Title { get => _title; set { _title = value; OnPropertyChanged(); } }
 
@@ -48,6 +47,13 @@ namespace TaskManagerWpfApp.ViewModels
 
         private DateTime? _endDate = DateTime.Now.AddDays(1);
         public DateTime? EndDate { get => _endDate; set { _endDate = value; OnPropertyChanged(); } }
+
+        private int? _parentTaskId;
+        public int? ParentTaskId
+        {
+            get => _parentTaskId;
+            set { _parentTaskId = value; OnPropertyChanged(); }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null) =>

@@ -44,40 +44,58 @@ using (var scope = app.Services.CreateScope())
     }
     if (!context.Tasks.Any(t => t.UserId == 5))
     {
-        var tasksForUser5 = new List<TaskItem>
+        var parentTask = new TaskItem
         {
-            new TaskItem {
-                Title = "Pierwsze seedowane zadanie",
-                Description = "To jest przykładowe zadanie seedowane.",
-                UserId = 5,
-                CategoryId = 1,
-                Priority = "High",
-                Status = 1,
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(2)
-            },
-            new TaskItem {
-                Title = "Drugie seedowane zadanie",
-                Description = "Drugie zadanie przykładowe.",
-                UserId = 5,
-                CategoryId = 2,
-                Priority = "Medium",
-                Status = 0,
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(4)
-            }
-            
+            Title = "Pierwsze seedowane zadanie",
+            Description = "To jest przykładowe zadanie seedowane.",
+            UserId = 5,
+            CategoryId = 1,
+            Priority = PriorityLevel.High,
+            Status = 1,
+            StartDate = DateTime.Now,
+            EndDate = DateTime.Now.AddDays(2)
         };
-        context.Tasks.AddRange(tasksForUser5);
+
+        var secondTask = new TaskItem
+        {
+            Title = "Drugie seedowane zadanie",
+            Description = "Drugie zadanie przykładowe.",
+            UserId = 5,
+            CategoryId = 2,
+            Priority = PriorityLevel.High,
+            Status = 0,
+            StartDate = DateTime.Now,
+            EndDate = DateTime.Now.AddDays(4)
+        };
+
+        context.Tasks.AddRange(parentTask, secondTask);
+        context.SaveChanges();
+
+        var subTask = new TaskItem
+        {
+            Title = "Podzadanie do pierwszego",
+            Description = "To jest podzadanie.",
+            UserId = 5,
+            CategoryId = 2,
+            Priority = PriorityLevel.Medium,
+            Status = 0,
+            PID = parentTask.Id,
+            StartDate = DateTime.Now,
+            EndDate = DateTime.Now.AddDays(4)
+        };
+
+        context.Tasks.Add(subTask);
         context.SaveChanges();
     }
 
 
-    //app.UseHttpsRedirection();
 
-    //app.UseAuthorization();
 
-    app.MapControllers();
+//app.UseHttpsRedirection();
+
+//app.UseAuthorization();
+
+app.MapControllers();
 
 
 

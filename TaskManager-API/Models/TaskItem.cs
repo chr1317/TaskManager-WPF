@@ -17,7 +17,7 @@ namespace TaskManager_API.Models
         public string? Description { get; set; }
 
         [Column("Priority")]
-        public string Priority { get; set; }
+        public PriorityLevel Priority { get; set; }
 
         [Column("Status")]
         public int Status { get; set; }

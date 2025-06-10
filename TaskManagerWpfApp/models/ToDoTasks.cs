@@ -9,6 +9,12 @@ namespace TaskManagerWpfApp
         Incomplete = 0,
         Complete = 1
     }
+    public enum PriorityLevel
+    {
+        Low,
+        Medium, 
+        High
+    }
 
     public class ToDoTasks : INotifyPropertyChanged
     {
@@ -31,11 +37,18 @@ namespace TaskManagerWpfApp
             set { _description = value; OnPropertyChanged(nameof(Description)); }
         }
 
-        public string Priority { get; set; } // Można zamienić na enum, jeśli w bazie nie jest tekstem
+        public PriorityLevel Priority { get; set; }
         public TaskStatus Status { get; set; }
 
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+
+        private Category _category;
+        public Category Category
+        {
+            get => _category;
+            set { _category = value; OnPropertyChanged(nameof(Category)); }
+        }
 
         public ObservableCollection<ToDoTasks> Subtasks { get; set; } = new();
 
